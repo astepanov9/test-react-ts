@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Card from './Card';
 
-function App() {
+export interface Users {
+  id: number;
+  name: string;
+}
+
+const App: React.FC = () => {
+  const [users, setUsers] = React.useState<Users[]>([]);
+
+  React.useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((res) => res.json())
+      .then((json) => setUsers([...json]));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        {users.map((user) => (
+          <Card key={user.id} {...user} />
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default App;
